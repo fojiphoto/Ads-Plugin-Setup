@@ -160,7 +160,8 @@ public class AdmobAdsManager : MonoSingleton<AdmobAdsManager>
     private bool isRewardedRequestGiven = false;
     private bool isAdmobInitialized = false;
     private bool isAppOpenAdRequest = false;
-    private bool m_CanShowAppOpenAd = true;
+    private bool m_IsStartupAppOpenAdShown = false;
+    private bool m_CanShowAppOpenAds = true;
 
     private bool isLinkerAd = false;
 
@@ -468,7 +469,7 @@ public class AdmobAdsManager : MonoSingleton<AdmobAdsManager>
         m_AppOpenAd = appOpenAd;
         m_AppOpenAd.OnAdDidDismissFullScreenContent += AppOpenAdOnOnAdClosed;
         AdmobGA_Helper.GA_Log(AdmobGAEvents.AppOpenAdLoaded);
-        MobileAdsEventExecutor.ExecuteInUpdate(ShowAppOpenAd);
+        MobileAdsEventExecutor.ExecuteInUpdate(CheckForStartupAd);
     }
 
     private void AppOpenAdOnOnAdClosed(object sender, EventArgs e)
@@ -476,12 +477,20 @@ public class AdmobAdsManager : MonoSingleton<AdmobAdsManager>
         MobileAdsEventExecutor.ExecuteInUpdate(RequestAppOpenAd);
         m_AppOpenAd = null;
     }
+
+    public void CheckForStartupAd()
+    {
+        if (m_IsStartupAppOpenAdShown)
+            return;
+        ShowAppOpenAd();
+        m_IsStartupAppOpenAdShown = true;
+    }
     
     public void ShowAppOpenAd()
     {
-        if (!IsAppOpenAddLoaded || !m_CanShowAppOpenAd)
+        if (!IsAppOpenAddLoaded || !m_CanShowAppOpenAds)
         {
-            m_CanShowAppOpenAd = true;
+            m_CanShowAppOpenAds = true;
             RequestAppOpenAd();
             return;
         }
@@ -546,7 +555,7 @@ public class AdmobAdsManager : MonoSingleton<AdmobAdsManager>
         MobileAdsEventExecutor.ExecuteInUpdate(this.RequestRewardedVideo);
         SetAppOpenAllowed(true);
     }
-    
+
     // Interstitial 
     //private void InterstitialAd_OnAdFailedToShow(object sender, AdErrorEventArgs e)
     //{
@@ -598,7 +607,23 @@ public class AdmobAdsManager : MonoSingleton<AdmobAdsManager>
 
     public void SetAppOpenAllowed(bool allow)
     {
-        m_CanShowAppOpenAd = allow;
+        if (!allow)
+            m_CanShowAppOpenAds = false;
+        else
+        {
+            MobileAdsEventExecutor.ExecuteInUpdate(SetAllowedEnabled);
+        }
+    }
+
+    private void SetAllowedEnabled()
+    {
+        StartCoroutine(SetAppOpenAllowedRoutine());
+    }
+    
+    private IEnumerator SetAppOpenAllowedRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+        m_CanShowAppOpenAds = true;
     }
 
     public void ShowInterstitial()
@@ -653,15 +678,14 @@ public class AdmobAdsManager : MonoSingleton<AdmobAdsManager>
 //        rewardedDelegate();
 //        return;
 //#endif
-
+        SetAppOpenAllowed(false);
         this.rewardedDelegate = rewardedDelegate;
 
         if (this.rewardedAd.IsLoaded())
         {
             this.isRewardedRequestGiven = false;
             this.rewardedAd.Show();
-            AdmobGA_Helper.GA_Log(AdmobGAEvents.ShowRewardedAd);
-            m_CanShowAppOpenAd = false;
+            AdmobGA_Helper.GA_Log(AdmobGAEvents.ShowRewardedAd); 
         }
 
         else
@@ -699,5 +723,7 @@ public class AdmobAdsManager : MonoSingleton<AdmobAdsManager>
         MobileAdsEventExecutor.ExecuteInUpdate(this.RequestRewardedVideo);
         PopupsManager.Instance.ShowSimpleToastMessage("Please, Try Again");
         StopCoroutine(m_RewardedRoutine);
+        
+        SetAppOpenAllowed(false);
     }
 }
