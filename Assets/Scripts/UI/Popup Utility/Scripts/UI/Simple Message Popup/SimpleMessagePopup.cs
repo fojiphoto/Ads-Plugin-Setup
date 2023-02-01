@@ -7,6 +7,24 @@ using UnityEngine.UI;
 
 namespace PopupUtility
 {
+
+    public enum MessageType
+    {
+        Simple,
+        Choice
+    }
+    
+    public struct MessagePopupConfig
+    {
+        public string Title;
+        public string Message;
+
+        public Action OkayAction;
+        public Action CancelAction;
+
+        public MessageType MessageType;
+    }
+    
     public class SimpleMessagePopup : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI m_MessageText;
@@ -20,19 +38,15 @@ namespace PopupUtility
             m_CancelButton.gameObject.SetActive(false);
         }
 
-        public void Show(string title, string messageText, Action onOkayButton, Action onCancelButton)
+        public void Show(MessagePopupConfig messagePopupConfig)
         {
-            m_TitleText.text = title;
-            m_MessageText.text = messageText;
+            m_TitleText.text = messagePopupConfig.Title;
+            m_MessageText.text = messagePopupConfig.Message;
 
-            ButtonAction(m_OkayButton, onOkayButton);
+            ButtonAction(m_OkayButton, messagePopupConfig.OkayAction);
+            ButtonAction(m_CancelButton,messagePopupConfig.CancelAction);
 
-            if (onCancelButton is not null)
-            {
-                m_CancelButton.gameObject.SetActive(true);
-                ButtonAction(m_CancelButton, onCancelButton);
-            }
-
+            m_CancelButton.gameObject.SetActive(messagePopupConfig.MessageType is MessageType.Choice);
             gameObject.SetActive(true);
         }
 

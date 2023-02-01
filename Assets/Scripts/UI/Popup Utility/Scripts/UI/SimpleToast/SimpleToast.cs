@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PopupUtility
 {
-    public class SimpleToastCanvas : MonoBehaviour
+    public class SimpleToast : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI m_ToastText;
         [SerializeField] private Animator m_Animator;

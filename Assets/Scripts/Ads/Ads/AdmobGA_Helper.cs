@@ -33,6 +33,9 @@ public class AdmobGA_Helper : MonoBehaviour
             case AdmobGAEvents.RequestBannerAd:
                 LogGAEvent("Admob:BAd:Request");
                 break;
+            case AdmobGAEvents.RequestAppOpenAd:
+                LogGAEvent("Admob:AppOpen:Request");
+                break;
 
 
             //LOADED
@@ -47,6 +50,9 @@ public class AdmobGA_Helper : MonoBehaviour
                 break;
             case AdmobGAEvents.RewardedAdLoaded:
                 LogGAEvent("Admob:rAd:Loaded");
+                break;
+            case AdmobGAEvents.AppOpenAdLoaded:
+                LogGAEvent("Admob:AppOpen:Loaded");
                 break;
          
             //Show Call
@@ -64,6 +70,9 @@ public class AdmobGA_Helper : MonoBehaviour
                 break;
             case AdmobGAEvents.BannerAdStarted:
                 LogGAEvent("Admob:BAd:ShowCall");
+                break;
+            case AdmobGAEvents.ShowAppOpenAd:
+                LogGAEvent("Admob:AppOpen:Show");
                 break;
 
 
@@ -114,6 +123,9 @@ public class AdmobGA_Helper : MonoBehaviour
                 break;
             case AdmobGAEvents.VideoAdNoInventory:
                 LogGAEvent("Admob:vAd:NoInventory");
+                break;
+            case AdmobGAEvents.AppOpenAdNotLoaded:
+                LogGAEvent("Admob:AppOpen:NoInventory");
                 break;
            
            //Ad Close

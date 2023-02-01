@@ -308,6 +308,7 @@ public class AdmobCalling : MonoBehaviour
         {
             Debug.Log("Illyas ShowInterstitialH");
             interstitialH.Show();
+            AdmobAdsManager.Instance.SetAppOpenAllowed(false);
         }
         else
         {
@@ -353,6 +354,7 @@ public class AdmobCalling : MonoBehaviour
         {
             Debug.Log("Illyas ShowInterstitialM");
             interstitialM.Show();
+            AdmobAdsManager.Instance.SetAppOpenAllowed(false);
         }
         else
         {
@@ -397,6 +399,7 @@ public class AdmobCalling : MonoBehaviour
         if (interstitialL != null && interstitialL.IsLoaded())
         {
             Debug.Log("Illyas ShowInterstitialL");
+            AdmobAdsManager.Instance.SetAppOpenAllowed(false);
             interstitialL.Show();
         }
     }
@@ -433,8 +436,8 @@ public class AdmobCalling : MonoBehaviour
     private void InterstitialHandleOnAdClosed(object sender, EventArgs e)
     {
         MonoBehaviour.print("HandleAdClosed event received");
-
         Invoke(nameof(RequestInterstitialH), NextAdRequstTime);
+        AdmobAdsManager.Instance.SetAppOpenAllowed(true);
     }
 
     private void InterstitialHandleOnAdOpened(object sender, EventArgs e)

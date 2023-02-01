@@ -56,5 +56,10 @@ public enum AdmobGAEvents
     RewardedAdClosed,
 
     AdaptersInitialized,
-    AdaptersNotInitialized
+    AdaptersNotInitialized,
+    
+    RequestAppOpenAd,
+    AppOpenAdLoaded,
+    ShowAppOpenAd,
+    AppOpenAdNotLoaded
 }
