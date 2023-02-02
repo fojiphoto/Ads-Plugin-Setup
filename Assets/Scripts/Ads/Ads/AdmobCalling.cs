@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using GoogleMobileAds.Api;
 using GoogleMobileAds;
+using GoogleMobileAds.Common;
 
 
 public class AdmobCalling : MonoBehaviour
@@ -108,30 +109,30 @@ public class AdmobCalling : MonoBehaviour
 
     public void HandleOnAdLoadedBottom_High(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleAdLoaded event received");
+     //   MonoBehaviour.print("HandleAdLoaded event received");
     }
 
     public void HandleOnAdFailedToLoadBottom_High(object sender, AdFailedToLoadEventArgs args)
     {
-        MonoBehaviour.print("HandleFailedToReceiveAd event received with message: ");
-        RequestBottomBanner_Med();
+       // MonoBehaviour.print("HandleFailedToReceiveAd event received with message: ");
+       MobileAdsEventExecutor.ExecuteInUpdate(RequestBottomBanner_Med);
     }
 
     public void HandleOnAdOpenedBottom_High(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleAdOpened event received");
+     //   MonoBehaviour.print("HandleAdOpened event received");
     }
 
     public void HandleOnAdClosedBottom_High(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleAdClosed event received");
+     //   MonoBehaviour.print("HandleAdClosed event received");
 
-        RequestBottomBanner_High();
+        MobileAdsEventExecutor.ExecuteInUpdate(RequestBottomBanner_High);
     }
 
     public void HandleOnAdLeavingApplicationBottom_High(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleAdLeavingApplication event received");
+       // MonoBehaviour.print("HandleAdLeavingApplication event received");
     }
 
     #endregion
@@ -435,24 +436,28 @@ public class AdmobCalling : MonoBehaviour
 
     private void InterstitialHandleOnAdClosed(object sender, EventArgs e)
     {
-        MonoBehaviour.print("HandleAdClosed event received");
-        Invoke(nameof(RequestInterstitialH), NextAdRequstTime);
+        MobileAdsEventExecutor.ExecuteInUpdate(RequestInterstitialHighMethod);
         AdmobAdsManager.Instance.SetAppOpenAllowed(true);
+    }
+
+    private void RequestInterstitialHighMethod()
+    {
+        Invoke(nameof(RequestInterstitialH), NextAdRequstTime);
     }
 
     private void InterstitialHandleOnAdOpened(object sender, EventArgs e)
     {
-        MonoBehaviour.print("HandleAdOpened event received");
+        //MonoBehaviour.print("HandleAdOpened event received");
     }
 
     private void InterstitialHandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs e)
     {
-        MonoBehaviour.print("HandleFailedToReceiveAd event received with message: ");
+        //MonoBehaviour.print("HandleFailedToReceiveAd event received with message: ");
     }
 
     private void InterstitialHandleOnAdLoaded(object sender, EventArgs e)
     {
-        MonoBehaviour.print("HandleAdLoaded event received");
+       // MonoBehaviour.print("HandleAdLoaded event received");
     }
 
 
