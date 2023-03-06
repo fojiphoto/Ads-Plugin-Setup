@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/AdmobDemoScene.unity
+    guid: 6b284dd8782c7a54d914fff4066d50ef
   m_configObjects: {}

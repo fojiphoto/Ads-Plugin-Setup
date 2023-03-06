@@ -205,7 +205,7 @@ public class AdmobAdsManager : MonoSingleton<AdmobAdsManager>
         this.isAdmobInitialized = true;
         MobileAdsEventExecutor.ExecuteInUpdate(RequestRewardedVideo);
         MobileAdsEventExecutor.ExecuteInUpdate(RequestAppOpenAd);
-        AdmobCalling._instance.RequestInterstitialH();
+        AdmobCalling._instance.RequestInterstitial_all();
         AdmobCalling._instance.RequestBottomBanner_High();
     }
 

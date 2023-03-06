@@ -29,7 +29,7 @@ public class AdmobCalling : MonoBehaviour
 
     [SerializeField] float timeToRequest=10f;
     [SerializeField] float NextAdRequstTime = 2f;
-
+    [SerializeField] float NextHighInterTime = 300;
     public static InterstitialAd interstitial;
     //public static RewardBasedVideoAd rewardBasedVideo;
 
@@ -57,6 +57,8 @@ public class AdmobCalling : MonoBehaviour
         //    }
         //});
     }
+
+
 
     #region Bottom Banner High
     public void RequestBottomBanner_High()
@@ -298,28 +300,68 @@ public class AdmobCalling : MonoBehaviour
     
     private InterstitialAd interstitialH, interstitialM, interstitialL;
 
+    private bool isCheckingLoad = true;
+    public bool HightFailedToLoad, MediumFailedToLoad;
+    public float InterHightTime = 300;
+    public float InterMediumTime = 180;
+
+    private void Update()
+    {
+        if (InterHightTime > 0 & HightFailedToLoad == true)
+            InterHightTime -= Time.deltaTime;
+
+        if (InterHightTime <= 0 & HightFailedToLoad == true)
+        {
+            HightFailedToLoad = false;
+            InterHightTime = 300;
+        }
+
+
+
+        if (InterMediumTime > 0 & MediumFailedToLoad == true)
+            InterMediumTime -= Time.deltaTime;
+
+        if (InterMediumTime <= 0 & MediumFailedToLoad == true)
+        {
+            MediumFailedToLoad = false;
+            InterMediumTime = 180;
+        }
+    }
+
+
+    public void RequestInterstitial_all()
+    {
+            CheckInterLoaded_H();
+            CheckInterLoaded_M();
+            RequestInterstitialL();
+    }
+
+    void CheckInterLoaded_H()
+    {
+        if (HightFailedToLoad == false)
+        {
+            RequestInterstitialH();
+        }   
+    }
+
+    void CheckInterLoaded_M()
+    {
+        if (MediumFailedToLoad == false)
+        {
+            RequestInterstitialM();
+        }   
+    }
+
     public void ShowInterstialAd()
     {
         ShowInterstitialH();
     }
 
-    public void ShowInterstitialH()
-    {
-        if (interstitialH != null && interstitialH.IsLoaded())
-        {
-            Debug.Log("Illyas ShowInterstitialH");
-            interstitialH.Show();
-            AdmobAdsManager.Instance.SetAppOpenAllowed(false);
-        }
-        else
-        {
-            Invoke(nameof(RequestInterstitialH), 0f);
-            ShowInterstitialM();
-        }
-    }
+    
 
     public void RequestInterstitialH()
     {
+       
         if (interstitialH != null)
         {
             if (interstitialH.IsLoaded())
@@ -328,13 +370,13 @@ public class AdmobCalling : MonoBehaviour
             }
         }
 
-        Debug.Log("Illyas RequestInterstitialH");
+        Debug.Log("AM >> Loading High Inter");
         // Initialize an InterstitialAd.
         this.interstitialH = new InterstitialAd(interstitialHigh);
         // Called when an ad request has successfully loaded.
         this.interstitialH.OnAdLoaded += InterstitialHandleOnAdLoaded;
         // Called when an ad request failed to load.
-        this.interstitialH.OnAdFailedToLoad += InterstitialHandleOnAdFailedToLoad;
+        this.interstitialH.OnAdFailedToLoad += InterstitialHandleOnAdFailedToLoad_H;
         // Called when an ad is shown.
         this.interstitialH.OnAdOpening += InterstitialHandleOnAdOpened;
         // Called when the ad is closed.
@@ -346,22 +388,11 @@ public class AdmobCalling : MonoBehaviour
         // Load the interstitial with the request.
         this.interstitialH.LoadAd(request);
 
-        Invoke(nameof(InterTest), timeToRequest);
-    }
+    
 
-    public void ShowInterstitialM()
-    {
-        if (interstitialM != null && interstitialM.IsLoaded())
-        {
-            Debug.Log("Illyas ShowInterstitialM");
-            interstitialM.Show();
-            AdmobAdsManager.Instance.SetAppOpenAllowed(false);
-        }
-        else
-        {
-            ShowInterstitialL();
-        }
+        //Invoke(nameof(CheckHighAndLoadMediumInter), timeToRequest);
     }
+    
 
     public void RequestInterstitialM()
     {
@@ -373,13 +404,13 @@ public class AdmobCalling : MonoBehaviour
             }
         }
 
-        Debug.Log("Illyas RequestInterstitialM");
+        Debug.Log("AM >> Loading Medium Inter");
         // Initialize an InterstitialAd.
         this.interstitialM = new InterstitialAd(interstitialMedium);
         // Called when an ad request has successfully loaded.
         this.interstitialM.OnAdLoaded += InterstitialHandleOnAdLoaded;
         // Called when an ad request failed to load.
-        this.interstitialM.OnAdFailedToLoad += InterstitialHandleOnAdFailedToLoad;
+        this.interstitialM.OnAdFailedToLoad += InterstitialHandleOnAdFailedToLoad_M;
         // Called when an ad is shown.
         this.interstitialM.OnAdOpening += InterstitialHandleOnAdOpened;
         // Called when the ad is closed.
@@ -391,15 +422,46 @@ public class AdmobCalling : MonoBehaviour
         // Load the interstitial with the request.
         this.interstitialM.LoadAd(request);
 
+        
+        //Invoke(nameof(CheckMediumAndLoadLowerInter), timeToRequest);
+    }
 
-        Invoke(nameof(InterTest1), timeToRequest);
+    public void ShowInterstitialH()
+    {
+        if (interstitialH != null && interstitialH.IsLoaded())
+        {
+            Debug.Log("AM >> Showing Hight Inter");
+            interstitialH.Show();
+            AdmobAdsManager.Instance.SetAppOpenAllowed(false);
+        }
+        else
+        {
+            //Invoke(nameof(RequestInterstitialH), 300f);
+            CheckInterLoaded_H();
+            ShowInterstitialM();
+        }
+    }
+
+    public void ShowInterstitialM()
+    {
+        if (interstitialM != null && interstitialM.IsLoaded())
+        {
+            Debug.Log("AM >> Showing Medium Inter");
+            interstitialM.Show();
+            AdmobAdsManager.Instance.SetAppOpenAllowed(false);
+        }
+        else
+        {
+            CheckInterLoaded_M();
+            ShowInterstitialL();
+        }
     }
 
     public void ShowInterstitialL()
     {
         if (interstitialL != null && interstitialL.IsLoaded())
         {
-            Debug.Log("Illyas ShowInterstitialL");
+            Debug.Log("AM >> Showing Lower Inter");
             AdmobAdsManager.Instance.SetAppOpenAllowed(false);
             interstitialL.Show();
         }
@@ -415,13 +477,13 @@ public class AdmobCalling : MonoBehaviour
             }
         }
 
-        Debug.Log("Illyas RequestInterstitialL");
+        Debug.Log("AM >> Loading Lower Inter");
         // Initialize an InterstitialAd.
         this.interstitialL = new InterstitialAd(interstitialLow);
         // Called when an ad request has successfully loaded.
         this.interstitialL.OnAdLoaded += InterstitialHandleOnAdLoaded;
         // Called when an ad request failed to load.
-        this.interstitialL.OnAdFailedToLoad += InterstitialHandleOnAdFailedToLoad;
+        this.interstitialL.OnAdFailedToLoad += InterstitialHandleOnAdFailedToLoad_L;
         // Called when an ad is shown.
         this.interstitialL.OnAdOpening += InterstitialHandleOnAdOpened;
         // Called when the ad is closed.
@@ -442,7 +504,7 @@ public class AdmobCalling : MonoBehaviour
 
     private void RequestInterstitialHighMethod()
     {
-        Invoke(nameof(RequestInterstitialH), NextAdRequstTime);
+        Invoke(nameof(RequestInterstitial_all), NextAdRequstTime);
     }
 
     private void InterstitialHandleOnAdOpened(object sender, EventArgs e)
@@ -450,18 +512,29 @@ public class AdmobCalling : MonoBehaviour
         //MonoBehaviour.print("HandleAdOpened event received");
     }
 
-    private void InterstitialHandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs e)
+    private void InterstitialHandleOnAdFailedToLoad_H(object sender, AdFailedToLoadEventArgs e)
     {
+        HightFailedToLoad = true;
         //MonoBehaviour.print("HandleFailedToReceiveAd event received with message: ");
     }
 
+    private void InterstitialHandleOnAdFailedToLoad_M(object sender, AdFailedToLoadEventArgs e)
+    {
+        MediumFailedToLoad = true;
+        //MonoBehaviour.print("HandleFailedToReceiveAd event received with message: ");
+    }
+    private void InterstitialHandleOnAdFailedToLoad_L(object sender, AdFailedToLoadEventArgs e)
+    {
+        //Load_H_Inter = false;
+        //MonoBehaviour.print("HandleFailedToReceiveAd event received with message: ");
+    }
     private void InterstitialHandleOnAdLoaded(object sender, EventArgs e)
     {
        // MonoBehaviour.print("HandleAdLoaded event received");
     }
 
 
-    void InterTest()
+    void CheckHighAndLoadMediumInter()
     {
         if (interstitialH != null)
         {
@@ -472,7 +545,7 @@ public class AdmobCalling : MonoBehaviour
         }
         Invoke(nameof(RequestInterstitialM), NextAdRequstTime);
     }
-    void InterTest1()
+    void CheckMediumAndLoadLowerInter()
     {
         if (interstitialM != null)
         {
