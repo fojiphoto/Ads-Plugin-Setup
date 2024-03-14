@@ -14,7 +14,8 @@ public class AppOpenAdDisplayHandler : MonoBehaviour
    {
       if (pauseStatus)
       {
-         AdmobAdsManager.Instance.ShowAppOpenAd();
+            Debug.LogError("Showing App Open");
+         AppOpenAdManager.Instance.ShowAdIfAvailable();
       }
 
       m_Text.text = pauseStatus ? "Came From Focus" : "None";
