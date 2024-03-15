@@ -3422,7 +3422,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2051332790}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f33587897abf82741b7be9de2e60a96c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e2b0e83cc2335c4bbfefed5628bac9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AD_UNIT_ID: ca-app-pub-3940256099942544/3419835294
@@ -3435,7 +3435,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2051332790}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65767cf4f25f84b4994a8d4ffb05e449, type: 3}
+  m_Script: {fileID: 11500000, guid: a19dff4e469d0484bb93f7f9852429d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   totalCoinsTxt: {fileID: 0}
@@ -3468,7 +3468,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2051332790}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef31357d628669f44aff2b579236e6e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a2825e72ce78204ca3ac53f6aa24404, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Text: {fileID: 0}
